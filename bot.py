@@ -4,7 +4,6 @@ from os.path import join
 import json
 from discord import Intents, Client, app_commands, ButtonStyle, Embed
 from discord.ui import button, View
-from functools import partial
 
 intents = Intents.default()
 client = Client(intents=intents)
