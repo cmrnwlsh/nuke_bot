@@ -1,8 +1,10 @@
+import asyncio
 import os
 from os.path import join
 import json
 from discord import Intents, Client, app_commands, ButtonStyle, Embed
 from discord.ui import button, View
+from functools import partial
 
 intents = Intents.default()
 client = Client(intents=intents)
@@ -13,8 +15,8 @@ token = json.load(open(join(path, 'config.json')))['token']
 
 @tree.command(description='Nuke this channel')
 async def nuke(interaction):
-    view = Confirm()
-    view.interaction_check = lambda self, view_interaction: view_interaction.user.id == interaction.user.id
+    view = Confirm(interaction)
+    view.interaction_check = async_partial(interaction_check, interaction)
     await interaction.response.send_message('Do you want to nuke this channel?', view=view)
     await view.wait()
 
@@ -24,9 +26,24 @@ async def on_ready():
     await tree.sync()
 
 
+def async_partial(f, *args):
+    async def f2(*args2):
+        result = f(*args, *args2)
+        if asyncio.iscoroutinefunction(f):
+            result = await result
+        return result
+
+    return f2
+
+
+async def interaction_check(view_interaction, interaction):
+    return view_interaction.user.id == interaction.user.id
+
+
 class Confirm(View):
-    def __init__(self):
+    def __init__(self, original):
         super().__init__()
+        self.original = original
 
     @button(label='Confirm', style=ButtonStyle.green)
     async def confirm(self, interaction, button):
@@ -39,7 +56,7 @@ class Confirm(View):
 
     @button(label='Cancel', style=ButtonStyle.red)
     async def cancel(self, interaction, button):
-        interaction.delete_original_response()
+        await self.original.delete_original_response()
         self.stop()
 
 
