@@ -6,6 +6,7 @@ from discord import Intents, Client, app_commands, ButtonStyle, Embed
 from discord.ui import button, View
 
 intents = Intents.default()
+intents.message_content = True
 client = Client(intents=intents)
 tree = app_commands.CommandTree(client)
 path = os.path.dirname(__file__)
