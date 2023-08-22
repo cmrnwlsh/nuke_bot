@@ -14,7 +14,7 @@ token = json.load(open(join(path, 'config.json')))['token']
 @tree.command(description='Nuke this channel')
 async def nuke(interaction):
     view = Confirm()
-    view.interaction_check = lambda view_interaction: view_interaction.user.id == interaction.user.id
+    view.interaction_check = lambda self, view_interaction: view_interaction.user.id == interaction.user.id
     await interaction.response.send_message('Do you want to nuke this channel?', view=view)
     await view.wait()
 
