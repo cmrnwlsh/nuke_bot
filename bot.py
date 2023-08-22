@@ -38,7 +38,6 @@ class Confirm(View):
 
     @button(label='Cancel', style=ButtonStyle.red)
     async def cancel(self, interaction, button):
-        await interaction.delete_original_response()
         self.stop()
 
 
