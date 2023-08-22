@@ -14,7 +14,8 @@ token = json.load(open(join(path, 'config.json')))['token']
 @tree.command(description='Nuke this channel')
 async def nuke(interaction):
     view = Confirm()
-    await interaction.response.send_message('Do you want to nuke this channel?', view=view, ephemeral=True)
+    view.interaction_check = lambda view_interaction: view_interaction.user.id == interaction.author.id
+    await interaction.response.send_message('Do you want to nuke this channel?', view=view)
     await view.wait()
 
 
@@ -38,6 +39,7 @@ class Confirm(View):
 
     @button(label='Cancel', style=ButtonStyle.red)
     async def cancel(self, interaction, button):
+        interaction.delete_original_response()
         self.stop()
 
 
