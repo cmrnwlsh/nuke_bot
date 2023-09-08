@@ -2,6 +2,8 @@ import asyncio
 import os
 from os.path import join
 import json
+
+import discord.invite
 from discord import Intents, Client, app_commands, ButtonStyle, Embed
 from discord.ui import button, View
 
@@ -15,10 +17,14 @@ token = json.load(open(join(path, 'config.json')))['token']
 
 @tree.command(description='Nuke this channel')
 async def nuke(interaction):
-    view = Confirm(interaction)
-    view.interaction_check = async_partial(interaction_check, interaction)
-    await interaction.response.send_message('Do you want to nuke this channel?', view=view)
-    await view.wait()
+    if 'Eye of God' in [role.name for role in interaction.user.roles]:
+        view = Confirm(interaction)
+        view.interaction_check = async_partial(interaction_check, interaction)
+        await interaction.response.send_message('Do you want to nuke this channel?', view=view)
+        await view.wait()
+    else:
+        await interaction.response.send_message(
+            'You do not have the correct role to use this command', ephemeral=True)
 
 
 @client.event
