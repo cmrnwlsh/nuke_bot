@@ -17,7 +17,7 @@ token = json.load(open(join(path, 'config.json')))['token']
 
 @tree.command(description='Nuke this channel')
 async def nuke(interaction):
-    if 'Eye of God' in [role.name for role in interaction.user.roles]:
+    if 'eye of god' in [role.name.lower() for role in interaction.user.roles]:
         view = Confirm(interaction)
         view.interaction_check = async_partial(interaction_check, interaction)
         await interaction.response.send_message('Do you want to nuke this channel?', view=view)
