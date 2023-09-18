@@ -3,7 +3,6 @@ import os
 from os.path import join
 import json
 
-import discord.invite
 from discord import Intents, Client, app_commands, ButtonStyle, Embed
 from discord.ui import button, View
 
@@ -17,7 +16,8 @@ token = json.load(open(join(path, 'config.json')))['token']
 
 @tree.command(description='Nuke this channel')
 async def nuke(interaction):
-    if 'eye of god' in [role.name.lower() for role in interaction.user.roles]:
+    if ('eye of god' in [role.name.lower() for role in interaction.user.roles]
+            or interaction.guild.owner_id == interaction.user.id):
         view = Confirm(interaction)
         view.interaction_check = async_partial(interaction_check, interaction)
         await interaction.response.send_message('Do you want to nuke this channel?', view=view)
