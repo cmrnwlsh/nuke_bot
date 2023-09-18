@@ -56,7 +56,8 @@ class Confirm(View):
         new_channel = await interaction.channel.clone()
         await interaction.channel.delete()
         embed = Embed(description='Boom')
-        embed.set_image(url='https://i.imgur.com/tCfGwg1.jpg')
+        embed.set_image(url='https://media2.giphy.com/media/XUFPGrX5Zis6Y/giphy.gif?cid='
+                            '6c09b952mf36fghxmzmzet11pi81n5wbwjwt4iqo42fs9aze&ep=v1_gifs_search&rid=giphy.gif&ct=g')
         await new_channel.send(embed=embed)
         self.stop()
 
